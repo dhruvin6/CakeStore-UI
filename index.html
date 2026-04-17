@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cake Delight — London's Finest Cakes</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --beige:#f5efe6;--beige2:#ede3d5;--beige3:#e0d0bc;
+  --white:#ffffff;--off-white:#fdfaf6;--warm-white:#faf7f2;
+  --dusty:#d9c5ae;--mocha:#6b4c3b;--espresso:#3d2314;
+  --caramel:#c8834a;--gold:#c9a84c;
+  --text-dark:#2d1a0e;--text-mid:#5a3e2b;--text-light:#9b7b64;
+  --shadow:rgba(61,35,20,0.12);--shadow2:rgba(61,35,20,0.22);
+  --nav-h:70px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Lato',sans-serif;background:var(--beige);color:var(--text-dark);overflow-x:hidden;}
+h1,h2,h3,h4,h5{font-family:'Times New Roman',Times,serif;font-weight:700;}
+img{display:block;}
+input,select,textarea,button{font-family:'Lato',sans-serif;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;width:100%;z-index:900;background:rgba(253,250,246,0.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--dusty);height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 4%;}
+.nav-logo{font-family:'Times New Roman',serif;font-weight:700;font-size:1.6rem;color:var(--espresso);letter-spacing:1px;cursor:pointer;text-decoration:none;flex-shrink:0;}
+.nav-logo span{color:var(--caramel);}
+.nav-links{display:flex;list-style:none;height:var(--nav-h);align-items:stretch;margin:0 1rem;}
+.nav-links li{position:relative;}
+.nav-links li a{display:flex;align-items:center;padding:0 0.95rem;height:100%;font-size:0.8rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--text-mid);text-decoration:none;transition:color 0.25s;white-space:nowrap;position:relative;}
+.nav-links li a::after{content:'';position:absolute;bottom:0;left:0.95rem;right:0.95rem;height:3px;background:var(--caramel);transform:scaleX(0);transition:transform 0.25s;transform-origin:center;}
+.nav-links li a:hover,.nav-links li a.active{color:var(--caramel);}
+.nav-links li a:hover::after,.nav-links li a.active::after{transform:scaleX(1);}
+.nav-actions{display:flex;gap:0.5rem;align-items:center;flex-shrink:0;}
+.btn-nav{background:var(--mocha);color:#fff;border:none;padding:8px 16px;font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background 0.3s;white-space:nowrap;}
+.btn-nav:hover{background:var(--espresso);}
+.cart-btn{position:relative;background:none;border:1.5px solid var(--mocha);color:var(--mocha);padding:7px 13px;font-size:0.78rem;cursor:pointer;border-radius:2px;transition:all 0.3s;white-space:nowrap;}
+.cart-btn:hover{background:var(--mocha);color:#fff;}
+.cart-count{position:absolute;top:-8px;right:-8px;background:var(--caramel);color:#fff;border-radius:50%;width:19px;height:19px;font-size:0.66rem;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+.hamburger span{width:22px;height:2px;background:var(--espresso);display:block;transition:all 0.3s;}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+
+/* ── MOBILE NAV ── */
+.mobile-nav{position:fixed;top:var(--nav-h);left:0;width:100%;background:var(--warm-white);border-bottom:1px solid var(--dusty);z-index:850;padding:0.5rem 0;transform:translateY(-120%);transition:transform 0.35s ease;pointer-events:none;box-shadow:0 8px 24px var(--shadow);}
+.mobile-nav.open{transform:translateY(0);pointer-events:all;}
+.mobile-nav a{display:block;padding:0.85rem 5%;font-size:0.88rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-mid);text-decoration:none;border-bottom:1px solid var(--beige2);transition:all 0.2s;}
+.mobile-nav a:hover{background:var(--beige);color:var(--caramel);}
+.mobile-nav .mob-actions{padding:1rem 5%;display:flex;gap:0.5rem;flex-wrap:wrap;}
+
+/* ── OFFER SLIDES ── */
+.slides-wrap{position:relative;overflow:hidden;width:100%;margin-top:var(--nav-h);}
+.slides-inner{display:flex;transition:transform 0.65s cubic-bezier(0.4,0,0.2,1);}
+.slide{min-width:100%;padding:0 5%;display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;text-align:center;}
+.slide-0{background:linear-gradient(90deg,#3d2314,#6b4c3b);min-height:72px;}
+.slide-1{background:linear-gradient(90deg,#7a3e1a,#c8834a);min-height:72px;}
+.slide-2{background:linear-gradient(90deg,#2c1a0a,#5a3520);min-height:72px;}
+.s-badge{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);color:#fff;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:2px;white-space:nowrap;}
+.s-text{color:#fff;font-family:'Times New Roman',serif;font-size:0.95rem;font-weight:700;}
+.s-sub{color:rgba(255,255,255,0.72);font-size:0.78rem;}
+.s-cta{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.5);color:#fff;padding:6px 18px;font-size:0.76rem;cursor:pointer;border-radius:2px;white-space:nowrap;transition:background 0.3s;letter-spacing:0.5px;}
+.s-cta:hover{background:rgba(255,255,255,0.3);}
+.slide-dots{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:5px;}
+.slide-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.35);cursor:pointer;transition:background 0.3s;}
+.slide-dot.active{background:#fff;}
+.slide-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;width:26px;height:26px;cursor:pointer;border-radius:50%;font-size:0.8rem;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
+.slide-arrow:hover{background:rgba(255,255,255,0.25);}
+.slide-arrow.sl{left:10px;}
+.slide-arrow.sr{right:10px;}
+
+/* ── HERO ── */
+.hero{min-height:calc(100vh - var(--nav-h) - 72px);display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(61,35,20,0.58) 0%,rgba(200,131,74,0.25) 100%),url('https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1600&q=80') center/cover no-repeat;text-align:center;color:#fff;}
+.hero-content{max-width:680px;padding:2rem;}
+.hero-badge{display:inline-block;border:1px solid rgba(255,255,255,0.6);padding:6px 20px;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:1.4rem;}
+.hero h1{font-size:clamp(2.2rem,6vw,4.8rem);line-height:1.1;margin-bottom:1.1rem;text-shadow:0 2px 20px rgba(0,0,0,0.3);}
+.hero p{font-size:1.08rem;font-weight:300;opacity:0.92;margin-bottom:2.4rem;line-height:1.7;}
+.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.btn-primary{background:var(--caramel);color:#fff;border:none;padding:13px 30px;font-family:'Times New Roman',serif;font-weight:700;font-size:0.96rem;cursor:pointer;border-radius:2px;transition:all 0.3s;text-decoration:none;display:inline-block;}
+.btn-primary:hover{background:var(--mocha);transform:translateY(-2px);}
+.btn-outline-w{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,0.8);padding:13px 30px;font-family:'Times New Roman',serif;font-weight:700;font-size:0.96rem;cursor:pointer;border-radius:2px;transition:all 0.3s;text-decoration:none;display:inline-block;}
+.btn-outline-w:hover{background:rgba(255,255,255,0.15);transform:translateY(-2px);}
+
+/* ── SHARED SECTION ── */
+section{padding:5rem 4%;}
+.section-tag{font-size:0.7rem;letter-spacing:4px;text-transform:uppercase;color:var(--caramel);display:block;margin-bottom:0.7rem;}
+.section-title{font-size:clamp(1.8rem,4vw,2.8rem);color:var(--espresso);margin-bottom:1.1rem;line-height:1.15;}
+.section-sub{color:var(--text-light);font-size:0.98rem;line-height:1.7;max-width:600px;}
+.divider{width:58px;height:3px;background:var(--caramel);margin:1.4rem 0;}
+
+/* ── REPUTATION ── */
+.reputation{background:var(--espresso);padding:3.5rem 4%;}
+.rep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.3rem;max-width:1200px;margin:0 auto;}
+.rep-card{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.11);padding:1.7rem 1.3rem;border-radius:4px;text-align:center;transition:all 0.4s;cursor:default;}
+.rep-card:hover{background:rgba(200,131,74,0.18);border-color:var(--caramel);transform:translateY(-5px);}
+.rep-icon{font-size:1.9rem;margin-bottom:0.8rem;display:block;}
+.rep-card h3{color:#fff;font-size:1rem;margin-bottom:0.4rem;}
+.rep-card p{color:rgba(255,255,255,0.6);font-size:0.83rem;line-height:1.6;}
+.rep-card .quote{font-style:italic;font-size:0.88rem;color:var(--caramel);margin-top:0.7rem;font-family:'Times New Roman',serif;}
+
+/* ── COLLECTIONS ── */
+.collections{background:var(--white);}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.8rem;max-width:1300px;margin:2.5rem auto 0;}
+.product-card{border-radius:4px;overflow:hidden;background:var(--off-white);box-shadow:0 2px 14px var(--shadow);transition:all 0.4s;border:1px solid var(--beige2);}
+.product-card:hover{transform:translateY(-7px);box-shadow:0 12px 36px var(--shadow2);}
+.product-img-wrap{position:relative;height:210px;overflow:hidden;cursor:pointer;}
+.product-img-wrap img{width:100%;height:100%;object-fit:cover;transition:opacity 0.5s,transform 0.5s;}
+.product-img-wrap .img-hover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.5s;}
+.product-card:hover .img-hover{opacity:1;}
+.product-card:hover .product-img-wrap img{transform:scale(1.05);}
+.product-badge{position:absolute;top:9px;left:9px;background:var(--caramel);color:#fff;font-size:0.66rem;letter-spacing:1px;padding:3px 9px;border-radius:2px;text-transform:uppercase;}
+.product-info{padding:1.15rem;}
+.product-info h3{font-size:1.05rem;color:var(--espresso);margin-bottom:0.3rem;}
+.product-info p{font-size:0.82rem;color:var(--text-light);margin-bottom:0.85rem;line-height:1.5;}
+.product-footer{display:flex;align-items:center;justify-content:space-between;gap:0.5rem;}
+.price{font-family:'Times New Roman',serif;font-weight:700;font-size:1.1rem;color:var(--mocha);}
+.price small{font-size:0.7rem;color:var(--text-light);font-family:'Lato',sans-serif;font-weight:400;}
+.btn-cart{background:var(--mocha);color:#fff;border:none;padding:8px 14px;font-size:0.78rem;cursor:pointer;border-radius:2px;transition:all 0.3s;white-space:nowrap;}
+.btn-cart:hover{background:var(--espresso);}
+
+/* ── GALLERY ── */
+.gallery{background:var(--beige2);}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:1200px;margin:2.5rem auto 0;}
+.gallery-item{position:relative;overflow:hidden;border-radius:4px;cursor:pointer;}
+.gallery-item.large{grid-column:span 2;}
+.gallery-item img{width:100%;height:270px;object-fit:cover;transition:transform 0.6s;display:block;}
+.gallery-item.large img{height:360px;}
+.gallery-item:hover img{transform:scale(1.06);}
+.gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(61,35,20,0.78) 0%,transparent 60%);opacity:0;transition:opacity 0.4s;display:flex;align-items:flex-end;padding:1.3rem;}
+.gallery-item:hover .gallery-overlay{opacity:1;}
+.gallery-overlay h4{color:#fff;font-size:0.98rem;}
+.gallery-overlay p{color:rgba(255,255,255,0.8);font-size:0.78rem;margin-top:3px;}
+
+/* ── UPCOMING ── */
+.upcoming{background:var(--warm-white);}
+.orders-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.3rem;max-width:1200px;margin:2.5rem auto 0;}
+.order-card{background:var(--white);border:1px solid var(--dusty);border-radius:4px;padding:1.5rem;transition:all 0.35s;position:relative;overflow:hidden;}
+.order-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--caramel);}
+.order-card:hover{transform:translateX(4px);box-shadow:0 8px 26px var(--shadow);}
+.order-date{font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--caramel);margin-bottom:0.4rem;}
+.order-card h3{font-size:1rem;color:var(--espresso);margin-bottom:0.35rem;}
+.order-card p{font-size:0.83rem;color:var(--text-light);line-height:1.5;}
+.order-slots{display:flex;flex-wrap:wrap;gap:5px;margin-top:0.8rem;}
+.slot-pill{background:var(--beige);color:var(--mocha);font-size:0.71rem;padding:3px 9px;border-radius:20px;border:1px solid var(--beige3);}
+.slot-pill.full{background:#f5e6e6;color:#a33;}
+
+/* ── ABOUT ── */
+.about{background:var(--beige);}
+.about-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;max-width:1200px;margin:0 auto;}
+.about-img-wrap{position:relative;border-radius:4px;overflow:hidden;height:480px;}
+.about-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s;}
+.about-img-wrap:hover img{transform:scale(1.03);}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;margin-top:2rem;}
+.stat-box{background:var(--white);border:1px solid var(--beige3);padding:1rem;border-radius:4px;text-align:center;}
+.stat-box .num{font-family:'Times New Roman',serif;font-size:1.8rem;font-weight:700;color:var(--mocha);display:block;}
+.stat-box span:last-child{font-size:0.76rem;color:var(--text-light);text-transform:uppercase;letter-spacing:1px;}
+
+/* ── TESTIMONIALS ── */
+.testimonials{background:var(--espresso);}
+.testimonials .section-title{color:#fff;}
+.testimonials .section-tag{color:var(--dusty);}
+.testimonials .divider{background:var(--dusty);}
+.test-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.3rem;max-width:1200px;margin:2.5rem auto 0;}
+.test-card{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:1.7rem;transition:all 0.4s;}
+.test-card:hover{background:rgba(200,131,74,0.14);border-color:var(--caramel);transform:translateY(-5px);}
+.stars{color:var(--gold);font-size:0.92rem;letter-spacing:2px;margin-bottom:0.8rem;}
+.test-card blockquote{color:rgba(255,255,255,0.85);font-size:0.91rem;line-height:1.7;font-style:italic;font-family:'Times New Roman',serif;margin-bottom:1.3rem;}
+.test-author{display:flex;align-items:center;gap:11px;}
+.test-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--caramel);}
+.test-name{color:#fff;font-size:0.86rem;font-weight:700;}
+.test-label{color:rgba(255,255,255,0.5);font-size:0.74rem;}
+
+/* ── CONTACT ── */
+.contact{background:var(--white);}
+.contact-inner{display:grid;grid-template-columns:1fr 1.2fr;gap:4rem;align-items:start;max-width:1200px;margin:0 auto;}
+.contact-info p{color:var(--text-mid);line-height:1.7;margin-bottom:1.6rem;font-size:0.94rem;}
+.info-item{display:flex;gap:11px;margin-bottom:1rem;align-items:flex-start;}
+.info-icon{font-size:1.2rem;margin-top:2px;flex-shrink:0;}
+.info-item h4{font-size:0.86rem;color:var(--espresso);margin-bottom:2px;}
+.info-item p{font-size:0.82rem;color:var(--text-light);margin:0;}
+
+/* ── FORMS ── */
+.form-group{display:flex;flex-direction:column;gap:4px;margin-bottom:0.9rem;}
+.form-group label{font-size:0.73rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-mid);font-weight:700;}
+.form-group input,.form-group textarea,.form-group select{border:1px solid var(--dusty);padding:10px 13px;font-size:0.9rem;background:var(--beige);border-radius:3px;transition:border 0.3s,background 0.2s;color:var(--text-dark);outline:none;width:100%;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--caramel);background:var(--white);}
+.form-group textarea{resize:vertical;min-height:110px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;}
+.form-error{font-size:0.72rem;color:#c62828;margin-top:3px;}
+
+/* ── SUBSCRIBE ── */
+.subscribe-bar{background:var(--caramel);padding:3rem 4%;text-align:center;}
+.subscribe-bar h2{color:#fff;font-size:1.7rem;margin-bottom:0.4rem;}
+.subscribe-bar p{color:rgba(255,255,255,0.85);margin-bottom:1.4rem;font-size:0.94rem;}
+.subscribe-form{display:flex;max-width:460px;margin:0 auto;border-radius:2px;overflow:hidden;}
+.subscribe-form input{flex:1;padding:13px 16px;border:none;font-size:0.92rem;background:#fff;outline:none;}
+.subscribe-form button{padding:13px 22px;background:var(--espresso);color:#fff;border:none;cursor:pointer;font-size:0.88rem;transition:background 0.3s;white-space:nowrap;}
+.subscribe-form button:hover{background:#1a0a04;}
+
+/* ── FOOTER ── */
+footer{background:var(--espresso);padding:4rem 4% 2rem;}
+.footer-top{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:2.5rem;max-width:1200px;margin:0 auto 3rem;}
+.footer-brand .logo-f{font-family:'Times New Roman',serif;font-weight:700;font-size:1.5rem;color:#fff;display:block;margin-bottom:0.9rem;}
+.footer-brand .logo-f span{color:var(--caramel);}
+.footer-brand p{color:rgba(255,255,255,0.52);font-size:0.84rem;line-height:1.7;}
+.footer-brand .f-contact{margin-top:1.1rem;display:flex;flex-direction:column;gap:0.35rem;}
+.footer-brand .f-contact span{color:rgba(255,255,255,0.58);font-size:0.82rem;}
+.footer-col h4{color:#fff;font-size:0.84rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.1rem;}
+.footer-col ul{list-style:none;}
+.footer-col ul li{margin-bottom:0.55rem;}
+.footer-col ul li a{color:rgba(255,255,255,0.52);font-size:0.84rem;text-decoration:none;transition:color 0.3s;}
+.footer-col ul li a:hover{color:var(--caramel);}
+.footer-cakes{max-width:1200px;margin:0 auto 2.5rem;}
+.footer-cakes h4{color:#fff;font-family:'Times New Roman',serif;font-size:1.3rem;margin-bottom:1.2rem;}
+.footer-cake-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1rem;}
+.footer-cake-card{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;transition:all 0.4s;cursor:pointer;}
+.footer-cake-card:hover{transform:translateY(-5px);border-color:var(--caramel);}
+.footer-cake-img{position:relative;height:120px;overflow:hidden;}
+.footer-cake-img img{width:100%;height:100%;object-fit:cover;transition:opacity 0.5s;}
+.footer-cake-img .fc-hover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.5s;}
+.footer-cake-card:hover .fc-hover{opacity:1;}
+.footer-cake-info{padding:0.7rem;}
+.footer-cake-info h5{color:#fff;font-size:0.84rem;margin-bottom:2px;}
+.footer-cake-info span{color:var(--caramel);font-size:0.8rem;font-weight:700;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.1);padding-top:1.8rem;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.footer-bottom p{color:rgba(255,255,255,0.38);font-size:0.78rem;}
+.pay-badges{display:flex;gap:6px;flex-wrap:wrap;}
+.pay-badge{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.65);font-size:0.7rem;padding:4px 10px;border-radius:3px;letter-spacing:0.5px;}
+
+/* ── CART PANEL ── */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:2000;display:flex;align-items:flex-start;justify-content:flex-end;}
+.cart-panel{background:var(--warm-white);width:420px;max-width:100vw;height:100vh;display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(0,0,0,0.2);animation:slideIn 0.35s ease;}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.cart-header{padding:1.3rem 1.4rem;border-bottom:1px solid var(--dusty);display:flex;justify-content:space-between;align-items:center;}
+.cart-header h2{font-size:1.2rem;color:var(--espresso);}
+.cart-close{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-light);line-height:1;}
+.cart-items{flex:1;overflow-y:auto;padding:1rem 1.4rem;}
+.cart-item{display:flex;gap:0.9rem;padding:0.85rem 0;border-bottom:1px solid var(--beige2);}
+.cart-item img{width:64px;height:64px;object-fit:cover;border-radius:3px;flex-shrink:0;}
+.cart-item-info{flex:1;min-width:0;}
+.cart-item-info h4{font-size:0.88rem;color:var(--espresso);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.c-price{font-size:0.86rem;color:var(--caramel);font-weight:700;}
+.qty-ctrl{display:flex;align-items:center;gap:6px;margin-top:6px;}
+.qty-btn{width:24px;height:24px;border:1.5px solid var(--dusty);background:var(--white);cursor:pointer;font-size:0.95rem;border-radius:2px;display:flex;align-items:center;justify-content:center;color:var(--mocha);transition:all 0.2s;}
+.qty-btn:hover{background:var(--mocha);color:#fff;border-color:var(--mocha);}
+.qty-num{font-size:0.86rem;font-weight:700;min-width:18px;text-align:center;color:var(--espresso);}
+.remove-btn{background:none;border:none;color:var(--text-light);cursor:pointer;font-size:0.95rem;flex-shrink:0;transition:color 0.2s;padding:2px;}
+.remove-btn:hover{color:#c62828;}
+.cart-footer{padding:1.3rem 1.4rem;border-top:1px solid var(--dusty);}
+.cart-total{display:flex;justify-content:space-between;margin-bottom:0.8rem;}
+.cart-total span{font-size:0.98rem;color:var(--text-mid);}
+.cart-total strong{font-size:1.1rem;color:var(--espresso);font-family:'Times New Roman',serif;}
+.btn-checkout-go{width:100%;background:var(--mocha);color:#fff;border:none;padding:13px;font-family:'Times New Roman',serif;font-size:0.98rem;font-weight:700;cursor:pointer;border-radius:3px;transition:background 0.3s;}
+.btn-checkout-go:hover{background:var(--espresso);}
+.empty-cart{text-align:center;padding:3rem 1rem;color:var(--text-light);}
+.empty-cart .e-icon{font-size:2.8rem;margin-bottom:0.8rem;}
+.empty-cart p{font-size:0.88rem;}
+
+/* ── CHECKOUT PAGE ── */
+.checkout-page{min-height:100vh;background:var(--beige);padding-top:calc(var(--nav-h) + 72px + 2rem);}
+.checkout-inner{max-width:960px;margin:0 auto;padding:0 4% 4rem;display:grid;grid-template-columns:1fr 360px;gap:2rem;align-items:start;}
+.checkout-form-box{background:var(--white);border:1px solid var(--beige2);border-radius:5px;padding:2rem;}
+.checkout-form-box h2{font-size:1.4rem;color:var(--espresso);margin-bottom:0.4rem;}
+.checkout-form-box .c-sub{color:var(--text-light);font-size:0.84rem;margin-bottom:1.6rem;}
+.section-label{font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--caramel);font-weight:700;border-bottom:1px solid var(--beige2);padding-bottom:0.5rem;margin:1.4rem 0 1rem;}
+.phone-row{display:grid;grid-template-columns:110px 1fr;gap:0.5rem;}
+.checkout-summary{background:var(--white);border:1px solid var(--beige2);border-radius:5px;padding:1.5rem;position:sticky;top:calc(var(--nav-h) + 80px);}
+.checkout-summary h3{font-size:1.1rem;color:var(--espresso);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--beige2);}
+.summary-item{display:flex;justify-content:space-between;align-items:center;padding:0.55rem 0;border-bottom:1px solid var(--beige2);gap:0.5rem;}
+.summary-item-name{font-size:0.84rem;color:var(--text-dark);flex:1;}
+.summary-item-qty{font-size:0.78rem;color:var(--text-light);}
+.summary-item-price{font-size:0.88rem;color:var(--mocha);font-weight:700;white-space:nowrap;}
+.summary-total{display:flex;justify-content:space-between;padding-top:0.9rem;margin-top:0.4rem;}
+.summary-total span{font-size:1rem;color:var(--text-mid);}
+.summary-total strong{font-size:1.2rem;color:var(--espresso);font-family:'Times New Roman',serif;}
+
+/* ── PAYMENT METHODS ── */
+.pay-methods{display:flex;flex-direction:column;gap:0.8rem;margin-bottom:1.5rem;}
+.pay-method-option{border:1.5px solid var(--beige3);border-radius:4px;padding:1rem 1.1rem;cursor:pointer;transition:all 0.25s;display:flex;align-items:center;gap:0.8rem;}
+.pay-method-option:hover{border-color:var(--caramel);}
+.pay-method-option.selected{border-color:var(--mocha);background:var(--off-white);}
+.pay-method-option input[type=radio]{accent-color:var(--mocha);width:16px;height:16px;flex-shrink:0;}
+.pay-method-label{flex:1;}
+.pay-method-label strong{display:block;font-size:0.9rem;color:var(--espresso);}
+.pay-method-label span{font-size:0.78rem;color:var(--text-light);}
+.pay-method-logos{display:flex;gap:5px;margin-left:auto;}
+.card-chip{background:var(--beige2);border:1px solid var(--dusty);border-radius:3px;padding:3px 8px;font-size:0.68rem;font-weight:700;color:var(--mocha);letter-spacing:0.5px;}
+.card-fields{background:var(--beige);border:1px solid var(--beige3);border-radius:4px;padding:1.2rem;margin-bottom:1rem;}
+.apple-pay-display{background:#000;color:#fff;border:none;border-radius:5px;padding:13px;width:100%;font-size:0.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:0.3px;transition:opacity 0.2s;margin-bottom:1rem;}
+.apple-pay-display:hover{opacity:0.85;}
+.apple-svg{width:16px;height:16px;fill:#fff;}
+.card-number-wrap{position:relative;}
+.card-icons-inline{position:absolute;right:10px;top:50%;transform:translateY(-50%);display:flex;gap:4px;}
+.ci{font-size:0.6rem;font-weight:700;padding:2px 5px;border:1px solid var(--dusty);border-radius:2px;background:#fff;color:var(--text-mid);}
+.place-order-btn{width:100%;background:var(--mocha);color:#fff;border:none;padding:15px;font-family:'Times New Roman',serif;font-size:1.05rem;font-weight:700;cursor:pointer;border-radius:4px;transition:background 0.3s;letter-spacing:0.5px;margin-top:0.5rem;}
+.place-order-btn:hover{background:var(--espresso);}
+.place-order-btn:disabled{background:var(--dusty);cursor:not-allowed;}
+.secure-note{text-align:center;font-size:0.75rem;color:var(--text-light);margin-top:0.7rem;display:flex;align-items:center;justify-content:center;gap:5px;}
+
+/* ── ORDER CONFIRMATION ── */
+.order-confirm{min-height:80vh;display:flex;align-items:center;justify-content:center;padding:2rem 4%;}
+.confirm-box{background:var(--white);border:1px solid var(--beige2);border-radius:6px;padding:2.5rem;max-width:560px;width:100%;text-align:center;box-shadow:0 4px 24px var(--shadow);}
+.confirm-icon{width:70px;height:70px;background:var(--beige2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;font-size:2rem;}
+.confirm-box h2{color:var(--espresso);margin-bottom:0.5rem;}
+.confirm-box p{color:var(--text-light);font-size:0.9rem;line-height:1.7;margin-bottom:0.5rem;}
+.confirm-ref{background:var(--beige);border:1px solid var(--beige3);border-radius:3px;padding:0.7rem 1rem;font-family:'Times New Roman',serif;font-size:1rem;color:var(--mocha);margin:1rem 0;}
+.notif-sent{display:flex;flex-direction:column;gap:0.5rem;margin:1rem 0;}
+.notif-item{display:flex;align-items:center;gap:8px;background:var(--beige);border:1px solid var(--beige3);border-radius:3px;padding:0.6rem 0.9rem;font-size:0.83rem;color:var(--text-mid);}
+.notif-item .ni-sent{color:#2a7a2a;font-weight:700;font-size:0.75rem;}
+
+/* ── AUTH MODAL ── */
+.auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2500;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.auth-box{background:var(--warm-white);width:410px;max-width:96vw;border-radius:5px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:popIn 0.3s ease;}
+@keyframes popIn{from{transform:scale(0.92);opacity:0}to{transform:scale(1);opacity:1}}
+.auth-top{background:var(--espresso);padding:1.7rem 1.8rem;text-align:center;}
+.auth-top h2{color:#fff;font-size:1.45rem;}
+.auth-top p{color:rgba(255,255,255,0.58);margin-top:0.3rem;font-size:0.84rem;}
+.auth-close-btn{float:right;background:none;border:none;color:rgba(255,255,255,0.55);font-size:1.35rem;cursor:pointer;line-height:1;margin-top:-0.1rem;}
+.auth-tabs{display:flex;border-bottom:1px solid var(--beige2);}
+.auth-tab{flex:1;padding:0.85rem;background:none;border:none;border-bottom:3px solid transparent;font-family:'Times New Roman',serif;font-size:0.96rem;font-weight:700;cursor:pointer;color:var(--text-light);transition:all 0.3s;}
+.auth-tab.active{border-bottom-color:var(--caramel);color:var(--mocha);}
+.auth-body{padding:1.6rem 1.8rem;}
+.btn-auth{width:100%;background:var(--caramel);color:#fff;border:none;padding:12px;font-family:'Times New Roman',serif;font-weight:700;font-size:0.96rem;cursor:pointer;border-radius:3px;margin-top:0.5rem;transition:background 0.3s;}
+.btn-auth:hover{background:var(--mocha);}
+
+/* ── ADMIN ── */
+.admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:4000;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.admin-login-box{background:var(--white);width:360px;max-width:96vw;border-radius:5px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.4);animation:popIn 0.3s ease;}
+.admin-login-top{background:var(--espresso);padding:1.4rem 1.6rem;display:flex;justify-content:space-between;align-items:center;}
+.admin-login-top h2{color:#fff;font-size:1.1rem;}
+.admin-close{background:none;border:none;color:rgba(255,255,255,0.55);font-size:1.35rem;cursor:pointer;}
+.admin-login-body{padding:1.6rem;}
+.admin-login-body p{font-size:0.82rem;color:var(--text-light);margin-bottom:1.2rem;}
+.admin-login-err{background:#fce4ec;border:1px solid #ef9a9a;border-radius:3px;padding:0.5rem 0.8rem;font-size:0.8rem;color:#c62828;margin-bottom:0.8rem;}
+.admin-box{background:#fff;width:900px;max-width:98vw;max-height:94vh;border-radius:5px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.4);display:flex;flex-direction:column;animation:popIn 0.3s ease;}
+.admin-header{background:var(--espresso);padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+.admin-header h2{color:#fff;font-size:1.05rem;}
+.admin-header p{color:rgba(255,255,255,0.52);font-size:0.73rem;margin-top:2px;}
+.admin-nav{display:flex;border-bottom:1px solid var(--beige2);flex-shrink:0;background:var(--warm-white);overflow-x:auto;}
+.admin-nav-btn{padding:0.8rem 1.1rem;background:none;border:none;border-bottom:3px solid transparent;font-size:0.76rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--text-light);transition:all 0.25s;white-space:nowrap;flex-shrink:0;}
+.admin-nav-btn.active{border-bottom-color:var(--caramel);color:var(--mocha);font-weight:700;}
+.admin-stats-bar{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--beige2);flex-shrink:0;background:var(--off-white);}
+.admin-stat{padding:0.9rem;text-align:center;border-right:1px solid var(--beige2);}
+.admin-stat:last-child{border-right:none;}
+.admin-stat .a-num{font-family:'Times New Roman',serif;font-size:1.55rem;font-weight:700;color:var(--mocha);display:block;}
+.admin-stat .a-lbl{font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);}
+.admin-body{flex:1;overflow-y:auto;padding:1.1rem 1.4rem;}
+.admin-section-title{font-size:0.92rem;color:var(--espresso);margin:0.3rem 0 0.8rem;padding-bottom:0.35rem;border-bottom:2px solid var(--caramel);}
+.admin-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.admin-table th{background:var(--beige);color:var(--text-mid);font-size:0.69rem;letter-spacing:1px;text-transform:uppercase;padding:8px 10px;text-align:left;border-bottom:1px solid var(--beige3);white-space:nowrap;}
+.admin-table td{padding:8px 10px;border-bottom:1px solid var(--beige2);color:var(--text-dark);word-break:break-word;max-width:180px;}
+.admin-table tr:last-child td{border-bottom:none;}
+.admin-table tr:hover td{background:var(--beige);}
+.badge-active{background:#e8f5e9;color:#2e7d32;font-size:0.68rem;padding:2px 7px;border-radius:10px;font-weight:700;}
+.badge-new{background:#fff3e0;color:#e65100;font-size:0.68rem;padding:2px 7px;border-radius:10px;font-weight:700;}
+.badge-vip{background:#f3e5f5;color:#7b1fa2;font-size:0.68rem;padding:2px 7px;border-radius:10px;font-weight:700;}
+.badge-sub{background:#e3f2fd;color:#1565c0;font-size:0.68rem;padding:2px 7px;border-radius:10px;font-weight:700;}
+.badge-order{background:#fce4ec;color:#c62828;font-size:0.68rem;padding:2px 7px;border-radius:10px;font-weight:700;}
+.admin-schema{font-size:0.7rem;color:var(--text-light);font-style:italic;margin-top:0.9rem;padding:0.7rem;background:var(--beige);border-radius:3px;line-height:1.6;font-family:monospace;}
+
+/* ── TOAST ── */
+.toast{position:fixed;top:calc(var(--nav-h) + 10px);right:14px;z-index:6000;background:var(--mocha);color:#fff;padding:12px 18px;border-radius:4px;font-size:0.85rem;display:flex;align-items:center;gap:9px;animation:toastIn 0.3s ease;box-shadow:0 4px 18px rgba(0,0,0,0.22);max-width:300px;}
+@keyframes toastIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+.toast-out{animation:toastOut 0.3s ease forwards;}
+@keyframes toastOut{to{transform:translateX(110%);opacity:0}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .checkout-inner{grid-template-columns:1fr;}
+  .checkout-summary{position:static;}
+  .footer-top{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:900px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .about-inner,.contact-inner{grid-template-columns:1fr;gap:2.5rem;}
+  .about-img-wrap{height:320px;}
+  .gallery-grid{grid-template-columns:1fr 1fr;}
+  .gallery-item.large{grid-column:span 2;}
+  .admin-stats-bar{grid-template-columns:repeat(3,1fr);}
+  .slide{gap:0.8rem;}
+  .s-sub{display:none;}
+}
+@media(max-width:640px){
+  .gallery-grid{grid-template-columns:1fr;}
+  .gallery-item.large{grid-column:span 1;}
+  .footer-top{grid-template-columns:1fr;}
+  .footer-cake-grid{grid-template-columns:repeat(2,1fr);}
+  .form-row,.phone-row{grid-template-columns:1fr;}
+  section{padding:3.5rem 4%;}
+  .admin-stats-bar{grid-template-columns:repeat(2,1fr);}
+  .admin-stat:nth-child(5){border-top:1px solid var(--beige2);}
+  .hero{min-height:60vh;}
+  .products-grid{grid-template-columns:1fr 1fr;}
+  .checkout-inner{padding:0 4% 3rem;}
+}
+@media(max-width:420px){
+  .products-grid{grid-template-columns:1fr;}
+  .nav-logo{font-size:1.3rem;}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef,useCallback}=React;
+
+/* ════════════ DATA ════════════ */
+const PRODUCTS=[
+  {id:1,name:'Victoria Sponge',desc:'Classic layered sponge with strawberry jam & Chantilly cream',price:28,badge:'Bestseller',img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80',imgHover:'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=600&q=80'},
+  {id:2,name:'Chocolate Drip Cake',desc:'Rich dark chocolate ganache cascade over three-layer cocoa sponge',price:42,badge:'Popular',img:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&q=80',imgHover:'https://images.unsplash.com/photo-1542124948-dc391252a940?w=600&q=80'},
+  {id:3,name:'Lemon Drizzle Tart',desc:'Zingy citrus curd in buttery pastry shell with candied lemon',price:22,badge:'New',img:'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&q=80',imgHover:'https://images.unsplash.com/photo-1490323916950-5fc78f32cce4?w=600&q=80'},
+  {id:4,name:'Red Velvet Wedding Cake',desc:'Three-tier ceremony cake with cream cheese frosting & edible roses',price:185,badge:'Bespoke',img:'https://images.unsplash.com/photo-1535254973040-607b474cb50d?w=600&q=80',imgHover:'https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=600&q=80'},
+  {id:5,name:'Carrot & Walnut Cake',desc:'Spiced carrot sponge with toasted walnuts & orange cream frosting',price:32,badge:'',img:'https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=600&q=80',imgHover:'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=600&q=80'},
+  {id:6,name:'Strawberry Shortcake',desc:'Layered vanilla genoise with fresh British strawberries & mascarpone',price:34,badge:'Seasonal',img:'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80',imgHover:'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=600&q=80'},
+  {id:7,name:'Salted Caramel Tart',desc:'French-style tarte with sea salt caramel & dark chocolate glaze',price:38,badge:'',img:'https://images.unsplash.com/photo-1452195100486-9cc805987862?w=600&q=80',imgHover:'https://images.unsplash.com/photo-1559620192-032c4bc4674e?w=600&q=80'},
+  {id:8,name:'Pistachio Rose Celebration Cake',desc:'Delicate pistachio sponge, rose water & cardamom, edible gold petals',price:48,badge:'Signature',img:'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600&q=80',imgHover:'https://images.unsplash.com/photo-1559181567-c3190bba012b?w=600&q=80'},
+];
+const GALLERY_ITEMS=[
+  {title:'Layering the Sponge',desc:'Building flavour from the base',img:'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=800&q=80',large:true},
+  {title:'Piping Rosettes',desc:'Precision decoration technique',img:'https://images.unsplash.com/photo-1607478900766-efe13248b125?w=600&q=80'},
+  {title:'Chocolate Tempering',desc:'Crafting the perfect ganache',img:'https://images.unsplash.com/photo-1548365328-8c6db3220e4c?w=600&q=80'},
+  {title:'Fresh Berry Arrangements',desc:'Seasonal ingredients, daily',img:'https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=600&q=80'},
+  {title:'Wedding Cake Assembly',desc:'Four-tier precision stacking',img:'https://images.unsplash.com/photo-1568051243851-f9b136146e97?w=600&q=80',large:true},
+];
+const ORDERS=[
+  {date:'14 Apr 2026',name:'Anniversary Chocolate Showstopper',desc:'Two-tier dark chocolate mirror glaze with gold leaf accents.',slots:['2 slots left']},
+  {date:'19 Apr 2026',name:'Corporate Spring Celebration',desc:'Assorted mini cakes (48 pieces) for office event with branded toppers.',slots:['Taking orders']},
+  {date:'26 Apr 2026',name:'Easter Brunch Box Collection',desc:'Seasonal spiced sponge with pastel buttercream eggs.',slots:['1 slot left']},
+  {date:'3 May 2026',name:'Bank Holiday Wedding',desc:'Bespoke five-tier floral wedding cake. Surrey venue delivery included.',slots:['Fully booked'],full:true},
+  {date:'10 May 2026',name:"Mother's Day Gift Boxes",desc:'Individual treat boxes with personalised cake slices & handwritten cards.',slots:['Taking orders']},
+  {date:'17 May 2026',name:"Children's Birthday Carousel",desc:'Whimsical carousel design with fondant figurines.',slots:['3 slots left']},
+];
+const TESTIMONIALS=[
+  {name:'Sophie Harrington',label:'Islington, London',stars:5,text:"My wedding cake was an absolute masterpiece. Everyone was speechless at how it looked and tasted."},
+  {name:'James Okafor',label:'Camden, London',stars:5,text:"Ordered the chocolate drip cake for my 40th and it exceeded every expectation. Delivery was flawless."},
+  {name:'Clara Whitfield',label:'Richmond, London',stars:5,text:"The most authentic cake I've tasted since my grandmother's. Cake Delight bakes with real soul."},
+  {name:'Priya Mehta',label:'Kensington, London',stars:4,text:"Wonderful from ordering to collection. The bakers advised brilliantly on flavour combinations."},
+  {name:'Thomas Bryant',label:'Hackney, London',stars:5,text:"Apple Pay checkout was effortless. The lemon drizzle tart arrived same day in perfect condition."},
+  {name:'Natasha Bellamy',label:'Brixton, London',stars:5,text:"The red velvet anniversary cake was beyond anything I imagined. Truly five-star experience."},
+];
+const REP_CARDS=[
+  {icon:'🚴',title:'Same-Day Delivery',text:'Free delivery on orders over £45 within 12 miles of our London kitchen.',quote:'"Arrived faster than expected!"'},
+  {icon:'🏪',title:'Click & Collect',text:'Order online, collect in store within 2 hours, ready and boxed.',quote:'"Seamless pickup, beautifully wrapped."'},
+  {icon:'💳',title:'Secure Payments',text:'Pay with Visa, Mastercard, Amex or Apple Pay. Safe, fast & contactless.',quote:'"Easiest checkout I\'ve used."'},
+  {icon:'💵',title:'Cash on Delivery',text:'Pay when your cake arrives. No upfront commitment required.',quote:'"Love that COD is still an option."'},
+  {icon:'🌿',title:'Ethically Sourced',text:'Free-range eggs, organic butter, sustainably sourced chocolate.',quote:'"Conscience-friendly indulgence."'},
+];
+const OFFERS=[
+  {tag:'Limited Time',text:'15% Off All Birthday Cakes This April',sub:'Use code BIRTHDAY15 · Inspired by Peggy Porschen seasonal pricing',cta:'Shop Now',link:'#collections'},
+  {tag:'New Arrival',text:'Strawberry & Rose Summer Collection — Now Available',sub:'Inspired by Ottolenghi Notting Hill summer menu · Limited slots',cta:'View Collection',link:'#collections'},
+  {tag:'Upcoming Event',text:'Mother\'s Day Gift Boxes — Pre-Order Opens 20 April',sub:'Bespoke gift sets from £28 · Free ribbon wrapping · London delivery',cta:'Pre-Order',link:'#upcoming'},
+];
+const COUNTRY_CODES=[
+  {code:'+44',label:'🇬🇧 +44'},{code:'+1',label:'🇺🇸 +1'},{code:'+91',label:'🇮🇳 +91'},
+  {code:'+971',label:'🇦🇪 +971'},{code:'+49',label:'🇩🇪 +49'},{code:'+33',label:'🇫🇷 +33'},
+  {code:'+92',label:'🇵🇰 +92'},{code:'+880',label:'🇧🇩 +880'},{code:'+61',label:'🇦🇺 +61'},
+];
+const UK_POSTCODES=['SW1A 1AA','E1W 1AA','W1A 1AA','N1 9GU','SE1 7PB','EC1A 1BB'];
+
+const INIT_CLIENTS=[
+  {id:1,name:'Sophie Harrington',email:'s.harrington@gmail.com',phone:'+44 7712 345678',joined:'2025-11-03',orders:4,total:312,status:'VIP',source:'order'},
+  {id:2,name:'James Okafor',email:'j.okafor@outlook.com',phone:'+44 7823 456789',joined:'2025-12-18',orders:2,total:84,status:'Active',source:'order'},
+  {id:3,name:'Clara Whitfield',email:'clara.w@icloud.com',phone:'+44 7934 567890',joined:'2026-01-07',orders:6,total:518,status:'VIP',source:'order'},
+  {id:4,name:'Priya Mehta',email:'priya.mehta@gmail.com',phone:'+44 7645 678901',joined:'2026-02-14',orders:1,total:48,status:'New',source:'signup'},
+  {id:5,name:'Thomas Bryant',email:'tom.bryant@yahoo.co.uk',phone:'+44 7756 789012',joined:'2026-03-01',orders:3,total:136,status:'Active',source:'order'},
+  {id:6,name:'Natasha Bellamy',email:'n.bellamy@gmail.com',phone:'+44 7867 890123',joined:'2026-03-22',orders:2,total:90,status:'Active',source:'order'},
+];
+const INIT_SUBSCRIBERS=[
+  {id:1,email:'weekly.treats@gmail.com',joined:'2026-01-14'},
+  {id:2,email:'londonsweet@hotmail.co.uk',joined:'2026-02-20'},
+  {id:3,email:'cakelover99@icloud.com',joined:'2026-03-08'},
+];
+const INIT_ORDERS_ADMIN=[
+  {id:'CD-1001',client:'Sophie Harrington',email:'s.harrington@gmail.com',phone:'+44 7712 345678',items:'Victoria Sponge ×2',total:56,date:'2026-03-15',status:'Delivered',notified:true},
+  {id:'CD-1002',client:'James Okafor',email:'j.okafor@outlook.com',phone:'+44 7823 456789',items:'Chocolate Drip Cake ×1',total:42,date:'2026-03-28',status:'Delivered',notified:true},
+  {id:'CD-1003',client:'Clara Whitfield',email:'clara.w@icloud.com',phone:'+44 7934 567890',items:'Pistachio Rose Cake ×1, Lemon Drizzle ×2',total:118,date:'2026-04-05',status:'Processing',notified:true},
+];
+
+/* ════════════ HELPERS ════════════ */
+function StarRating({n}){return <span>{'★'.repeat(n)}{'☆'.repeat(5-n)}</span>;}
+function genRef(){return'CD-'+Math.floor(1000+Math.random()*9000);}
+function today(){return new Date().toISOString().split('T')[0];}
+
+/* ════════════ TOAST ════════════ */
+function Toast({msg,onDone}){
+  const[out,setOut]=useState(false);
+  useEffect(()=>{const t1=setTimeout(()=>setOut(true),2400);const t2=setTimeout(onDone,2800);return()=>{clearTimeout(t1);clearTimeout(t2);};},[]);
+  return <div className={`toast${out?' toast-out':''}`}><span>✓</span>{msg}</div>;
+}
+
+/* ════════════ OFFER SLIDES ════════════ */
+function OfferSlides({onNav}){
+  const[idx,setIdx]=useState(0);
+  const timerRef=useRef();
+  const go=useCallback(i=>{setIdx((i+OFFERS.length)%OFFERS.length);},[]);
+  useEffect(()=>{timerRef.current=setInterval(()=>go(idx+1),5000);return()=>clearInterval(timerRef.current);},[idx]);
+  const o=OFFERS[idx];
+  return(
+    <div className="slides-wrap">
+      <div className="slides-inner" style={{transform:`translateX(-${idx*100}%)`}}>
+        {OFFERS.map((o,i)=>(
+          <div className={`slide slide-${i}`} key={i} style={{minHeight:'72px',paddingTop:'8px',paddingBottom:'16px'}}>
+            <span className="s-badge">{o.tag}</span>
+            <span className="s-text">{o.text}</span>
+            <span className="s-sub">{o.sub}</span>
+            <button className="s-cta" onClick={()=>onNav(o.link)}>{o.cta}</button>
+          </div>
+        ))}
+      </div>
+      <button className="slide-arrow sl" onClick={()=>go(idx-1)}>‹</button>
+      <button className="slide-arrow sr" onClick={()=>go(idx+1)}>›</button>
+      <div className="slide-dots">
+        {OFFERS.map((_,i)=><span key={i} className={`slide-dot${i===idx?' active':''}`} onClick={()=>go(i)}/>)}
+      </div>
+    </div>
+  );
+}
+
+/* ════════════ NAV ════════════ */
+function Nav({activePage,onNav,onCart,cartQty,onAuth,onAdmin}){
+  const[mob,setMob]=useState(false);
+  const links=[['home','Home'],['about','About Us'],['collections','Collections'],['gallery','Making Cakes'],['upcoming','Orders'],['testimonials','Testimonials'],['contact','Contact']];
+  return(
+    <>
+    <nav>
+      <a className="nav-logo" onClick={()=>onNav('home')} href="#">Cake <span>Delight</span></a>
+      <ul className="nav-links">
+        {links.map(([id,label])=>(
+          <li key={id}>
+            <a href={`#${id}`} className={activePage===id?'active':''} onClick={e=>{e.preventDefault();onNav(id);setMob(false);}}>
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div className="nav-actions">
+        <button className="btn-nav" onClick={onAuth}>Sign In</button>
+        <button className="cart-btn" onClick={onCart}>
+          Cart {cartQty>0&&<span className="cart-count">{cartQty}</span>}
+        </button>
+        <button className="hamburger" onClick={()=>setMob(!mob)} className={`hamburger${mob?' open':''}`} style={{display:'none'}}>
+          <span/><span/><span/>
+        </button>
+        <button onClick={()=>setMob(!mob)} style={{display:'flex',flexDirection:'column',gap:'5px',cursor:'pointer',background:'none',border:'none',padding:'4px'}} id="ham-btn">
+          <span style={{width:'22px',height:'2px',background:'var(--espresso)',display:'block',transition:'all 0.3s',transform:mob?'rotate(45deg) translate(5px,5px)':'none'}}/>
+          <span style={{width:'22px',height:'2px',background:'var(--espresso)',display:'block',transition:'all 0.3s',opacity:mob?0:1}}/>
+          <span style={{width:'22px',height:'2px',background:'var(--espresso)',display:'block',transition:'all 0.3s',transform:mob?'rotate(-45deg) translate(5px,-5px)':'none'}}/>
+        </button>
+      </div>
+    </nav>
+    <div className={`mobile-nav${mob?' open':''}`}>
+      {links.map(([id,label])=>(
+        <a key={id} href={`#${id}`} onClick={e=>{e.preventDefault();onNav(id);setMob(false);}}>{label}</a>
+      ))}
+      <div className="mob-actions">
+        <button className="btn-nav" onClick={()=>{onAuth();setMob(false);}}>Sign In</button>
+        <button className="cart-btn" onClick={()=>{onCart();setMob(false);}}>Cart {cartQty>0&&`(${cartQty})`}</button>
+      </div>
+    </div>
+    </>
+  );
+}
+
+/* ════════════ HOME PAGE ════════════ */
+function HomePage({onNav,addToCart}){
+  return(
+    <>
+    {/* HERO */}
+    <div className="hero" id="home">
+      <div className="hero-content">
+        <div className="hero-badge">London Artisan Bakery · Est. 2014</div>
+        <h1>Cakes Baked<br/>With Pure Love</h1>
+        <p>Handcrafted to order from our South London kitchen. Every layer tells a story — yours.</p>
+        <div className="hero-ctas">
+          <a href="#collections" className="btn-primary" onClick={e=>{e.preventDefault();onNav('collections');}}>Shop Cakes</a>
+          <a href="#about" className="btn-outline-w" onClick={e=>{e.preventDefault();onNav('about');}}>Our Story</a>
+        </div>
+      </div>
+    </div>
+
+    {/* REPUTATION */}
+    <div className="reputation" id="reputation">
+      <div className="rep-grid">
+        {REP_CARDS.map((c,i)=>(
+          <div className="rep-card" key={i}>
+            <span className="rep-icon">{c.icon}</span>
+            <h3>{c.title}</h3><p>{c.text}</p>
+            <div className="quote">{c.quote}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+    </>
+  );
+}
+
+/* ════════════ COLLECTIONS PAGE ════════════ */
+function CollectionsPage({addToCart}){
+  return(
+    <section className="collections" id="collections" style={{paddingTop:'calc(var(--nav-h) + 72px + 3rem)'}}>
+      <span className="section-tag">Our Menu</span>
+      <h2 className="section-title">Cake Collections</h2>
+      <div className="divider"/>
+      <p className="section-sub">Every cake is made to order using the finest seasonal British ingredients. Prices from £22 — bespoke tiers on request.</p>
+      <div className="products-grid">
+        {PRODUCTS.map(p=>(
+          <div className="product-card" key={p.id}>
+            <div className="product-img-wrap">
+              <img src={p.img} alt={p.name}/>
+              <img className="img-hover" src={p.imgHover} alt={p.name}/>
+              {p.badge&&<span className="product-badge">{p.badge}</span>}
+            </div>
+            <div className="product-info">
+              <h3>{p.name}</h3><p>{p.desc}</p>
+              <div className="product-footer">
+                <div className="price">£{p.price}<small> / cake</small></div>
+                <button className="btn-cart" onClick={()=>addToCart(p)}>Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ════════════ GALLERY PAGE ════════════ */
+function GalleryPage(){
+  return(
+    <section className="gallery" id="gallery" style={{paddingTop:'calc(var(--nav-h) + 72px + 3rem)'}}>
+      <span className="section-tag">Behind the Scenes</span>
+      <h2 className="section-title">Making Cakes at Home</h2>
+      <div className="divider"/>
+      <p className="section-sub">Step inside our kitchen. Every cake is crafted by hand — from sponge to final garnish.</p>
+      <div className="gallery-grid">
+        {GALLERY_ITEMS.map((g,i)=>(
+          <div className={`gallery-item${g.large?' large':''}`} key={i}>
+            <img src={g.img} alt={g.title}/>
+            <div className="gallery-overlay"><div><h4>{g.title}</h4><p>{g.desc}</p></div></div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ════════════ ORDERS PAGE ════════════ */
+function OrdersPage(){
+  return(
+    <section className="upcoming" id="upcoming" style={{paddingTop:'calc(var(--nav-h) + 72px + 3rem)'}}>
+      <span className="section-tag">Limited Availability</span>
+      <h2 className="section-title">Upcoming Orders & Events</h2>
+      <div className="divider"/>
+      <p className="section-sub">We take a limited number of bespoke commissions each week. Secure your slot early to avoid disappointment.</p>
+      <div className="orders-grid">
+        {ORDERS.map((o,i)=>(
+          <div className="order-card" key={i}>
+            <div className="order-date">{o.date}</div>
+            <h3>{o.name}</h3><p>{o.desc}</p>
+            <div className="order-slots">{o.slots.map((s,j)=><span key={j} className={`slot-pill${o.full?' full':''}`}>{s}</span>)}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ════════════ ABOUT PAGE ════════════ */
+function AboutPage(){
+  return(
+    <section className="about" id="about" style={{paddingTop:'calc(var(--nav-h) + 72px + 3rem)'}}>
+      <div className="about-inner">
+        <div className="about-img-wrap">
+          <img src="https://images.unsplash.com/photo-1556217477-d325251ece38?w=800&q=80" alt="Our kitchen"/>
+        </div>
+        <div>
+          <span className="section-tag">Our Story</span>
+          <h2 className="section-title">Baked in London,<br/>Loved Everywhere</h2>
+          <div className="divider"/>
+          <p className="section-sub">Cake Delight began in 2014 as a kitchen passion project by founder Elara Whitmore — a classically trained pâtissière who wanted to bring the warmth of a Parisian boulangerie to South London.</p>
+          <br/>
+          <p className="section-sub">Today we serve hundreds of households across London, crafting every cake to order with free-range eggs, organic butter, and a whole lot of heart. No mass production. No shortcuts. Just honest, extraordinary baking.</p>
+          <div className="about-stats">
+            <div className="stat-box"><span className="num">12+</span><span>Years Baking</span></div>
+            <div className="stat-box"><span className="num">4,800+</span><span>Cakes Delivered</span></div>
+            <div className="stat-box"><span className="num">98%</span><span>5-Star Reviews</span></div>
+            <div className="stat-box"><span className="num">London</span><span>Based & Proud</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ════════════ TESTIMONIALS PAGE ════════════ */
+function TestimonialsPage(){
+  return(
+    <section className="testimonials" id="testimonials" style={{paddingTop:'calc(var(--nav-h) + 72px + 3rem)'}}>
+      <span className="section-tag">What Clients Say</span>
+      <h2 className="section-title">Stories of Sweetness</h2>
+      <div className="divider"/>
+      <div className="test-grid">
+        {TESTIMONIALS.map((t,i)=>(
+          <div className="test-card" key={i}>
+            <div className="stars"><StarRating n={t.stars}/></div>
+            <blockquote>"{t.text}"</blockquote>
+            <div className="test-author">
+              <img className="test-avatar" src={`https://i.pravatar.cc/80?img=${i+10}`} alt={t.name}/>
+              <div><div className="test-name">{t.name}</div><div className="test-label">{t.label}</div></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ════════════ CONTACT PAGE ════════════ */
+function ContactPage({addToast}){
+  function handle(e){e.preventDefault();addToast('Message sent! We\'ll be in touch soon.');}
+  return(
+    <section className="contact" id="contact" style={{paddingTop:'calc(var(--nav-h) + 72px + 3rem)'}}>
+      <div className="contact-inner">
+        <div className="contact-info">
+          <span className="section-tag">Get In Touch</span>
+          <h2 className="section-title">Contact Us</h2>
+          <div className="divider"/>
+          <p>Have a bespoke cake in mind? Planning a wedding or corporate event? We'd love to hear from you.</p>
+          <div className="info-item"><span className="info-icon">📍</span><div><h4>Visit Us</h4><p>42 Lavender Hill, Battersea, London SW11 5RQ</p></div></div>
+          <div className="info-item"><span className="info-icon">🕐</span><div><h4>Opening Hours</h4><p>Tue–Sat: 8am–6pm · Sun: 9am–3pm</p></div></div>
+          <div className="info-item"><span className="info-icon">📞</span><div><h4>Phone</h4><p>+44 7404752168</p></div></div>
+          <div className="info-item"><span className="info-icon">✉️</span><div><h4>Email</h4><p>dhruvintandel1507@gmail.com</p></div></div>
+        </div>
+        <form onSubmit={handle}>
+          <div className="form-row">
+            <div className="form-group"><label>First Name</label><input type="text" placeholder="Jane" required/></div>
+            <div className="form-group"><label>Last Name</label><input type="text" placeholder="Smith" required/></div>
+          </div>
+          <div className="form-group"><label>Email</label><input type="email" placeholder="jane@example.com" required/></div>
+          <div className="form-group"><label>Enquiry Type</label>
+            <select><option>Birthday Cake</option><option>Wedding Cake</option><option>Corporate Order</option><option>General Enquiry</option></select>
+          </div>
+          <div className="form-group"><label>Message</label><textarea placeholder="Tell us about your perfect cake…" required></textarea></div>
+          <button className="btn-primary" type="submit" style={{border:'none',cursor:'pointer',width:'100%',textAlign:'center'}}>Send Message</button>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+/* ════════════ CHECKOUT PAGE ════════════ */
+function CheckoutPage({cart,onSuccess,onBack,onSaveClient,onSaveOrder}){
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const[payMethod,setPayMethod]=useState('card');
+  const[loading,setLoading]=useState(false);
+  const[f,setF]=useState({firstName:'',lastName:'',email:'',countryCode:'+44',phone:'',addr1:'',addr2:'',addr3:'',street:'',postcode:''});
+  const[card,setCard]=useState({number:'',expiry:'',cvv:'',name:''});
+  const[errors,setErrors]=useState({});
+
+  function set(k,v){setF(p=>({...p,[k]:v}));}
+  function setC(k,v){setCard(p=>({...p,[k]:v}));}
+  function fmtCard(v){return v.replace(/\D/g,'').slice(0,16).replace(/(.{4})/g,'$1 ').trim();}
+  function fmtExpiry(v){v=v.replace(/\D/g,'').slice(0,4);return v.length>2?v.slice(0,2)+'/'+v.slice(2):v;}
+  function fmtPostcode(v){return v.toUpperCase().replace(/[^A-Z0-9 ]/g,'').slice(0,8);}
+
+  function validate(){
+    const e={};
+    if(!f.firstName.trim()) e.firstName='Required';
+    if(!f.lastName.trim()) e.lastName='Required';
+    if(!/\S+@\S+\.\S+/.test(f.email)) e.email='Valid email required';
+    if(!f.phone.replace(/\s/g,'').match(/^\d{9,12}$/)) e.phone='Valid mobile number required';
+    if(!f.addr1.trim()) e.addr1='Required';
+    if(!f.street.trim()) e.street='Required';
+    if(!f.postcode.trim()) e.postcode='Required';
+    if(payMethod==='card'){
+      if(card.number.replace(/\s/g,'').length<16) e.cardNum='Enter 16-digit card number';
+      if(!/^\d{2}\/\d{2}$/.test(card.expiry)) e.expiry='MM/YY format';
+      if(card.cvv.length<3) e.cvv='3 digits required';
+      if(!card.name.trim()) e.cardName='Required';
+    }
+    setErrors(e);
+    return Object.keys(e).length===0;
+  }
+
+  function handlePlaceOrder(e){
+    e.preventDefault();
+    if(!validate()) return;
+    setLoading(true);
+    setTimeout(()=>{
+      const ref=genRef();
+      const fullName=f.firstName+' '+f.lastName;
+      const fullPhone=f.countryCode+' '+f.phone;
+      const orderData={
+        id:ref,client:fullName,email:f.email,phone:fullPhone,
+        addr:`${f.addr1}${f.addr2?' / '+f.addr2:''}${f.addr3?' / '+f.addr3:''}, ${f.street}, ${f.postcode}`,
+        items:cart.map(i=>`${i.name} ×${i.qty}`).join(', '),
+        total,date:today(),status:'Confirmed',notified:true,payMethod
+      };
+      onSaveClient({name:fullName,email:f.email,phone:fullPhone,source:'order'});
+      onSaveOrder(orderData);
+      setLoading(false);
+      onSuccess({ref,email:f.email,phone:fullPhone,name:fullName,total});
+    },1800);
+  }
+
+  function handleApplePay(){
+    setLoading(true);
+    setTimeout(()=>{
+      const ref=genRef();
+      onSaveOrder({id:ref,client:'Apple Pay User',email:'—',phone:'—',addr:'—',items:cart.map(i=>`${i.name} ×${i.qty}`).join(', '),total,date:today(),status:'Confirmed',notified:true,payMethod:'applepay'});
+      setLoading(false);
+      onSuccess({ref,email:'your Apple Pay email',phone:'—',name:'Valued Customer',total});
+    },1500);
+  }
+
+  return(
+    <div className="checkout-page">
+      <div className="checkout-inner">
+        <div className="checkout-form-box">
+          <h2>Checkout</h2>
+          <p className="c-sub">Please fill in your details to complete your order.</p>
+          <form onSubmit={handlePlaceOrder} noValidate>
+            {/* Customer Details */}
+            <div className="section-label">Customer Details</div>
+            <div className="form-row">
+              <div className="form-group">
+                <label>First Name</label>
+                <input value={f.firstName} onChange={e=>set('firstName',e.target.value)} placeholder="Jane" required/>
+                {errors.firstName&&<span className="form-error">{errors.firstName}</span>}
+              </div>
+              <div className="form-group">
+                <label>Last Name</label>
+                <input value={f.lastName} onChange={e=>set('lastName',e.target.value)} placeholder="Smith" required/>
+                {errors.lastName&&<span className="form-error">{errors.lastName}</span>}
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Email Address</label>
+              <input type="email" value={f.email} onChange={e=>set('email',e.target.value)} placeholder="jane.smith@example.com" required/>
+              {errors.email&&<span className="form-error">{errors.email}</span>}
+            </div>
+            <div className="form-group">
+              <label>Contact Number</label>
+              <div className="phone-row">
+                <select value={f.countryCode} onChange={e=>set('countryCode',e.target.value)}>
+                  {COUNTRY_CODES.map(c=><option key={c.code} value={c.code}>{c.label}</option>)}
+                </select>
+                <div>
+                  <input value={f.phone} onChange={e=>set('phone',e.target.value.replace(/\D/g,'').slice(0,12))} placeholder="7404752168" required/>
+                  {errors.phone&&<span className="form-error">{errors.phone}</span>}
+                </div>
+              </div>
+            </div>
+
+            {/* Delivery Address */}
+            <div className="section-label">Delivery Address</div>
+            <div className="form-group">
+              <label>House / Flat Number (Line 1)</label>
+              <input value={f.addr1} onChange={e=>set('addr1',e.target.value)} placeholder="42" required/>
+              {errors.addr1&&<span className="form-error">{errors.addr1}</span>}
+            </div>
+            <div className="form-group">
+              <label>Apartment / Floor (Line 2 — Optional)</label>
+              <input value={f.addr2} onChange={e=>set('addr2',e.target.value)} placeholder="Flat B"/>
+            </div>
+            <div className="form-group">
+              <label>Building / Complex (Line 3 — Optional)</label>
+              <input value={f.addr3} onChange={e=>set('addr3',e.target.value)} placeholder="Rose Court"/>
+            </div>
+            <div className="form-group">
+              <label>Street Name</label>
+              <input value={f.street} onChange={e=>set('street',e.target.value)} placeholder="Lavender Hill" required/>
+              {errors.street&&<span className="form-error">{errors.street}</span>}
+            </div>
+            <div className="form-group">
+              <label>UK Postcode</label>
+              <input value={f.postcode} onChange={e=>set('postcode',fmtPostcode(e.target.value))} placeholder="SW11 5RQ" maxLength={8} required/>
+              {errors.postcode&&<span className="form-error">{errors.postcode}</span>}
+            </div>
+
+            {/* Payment */}
+            <div className="section-label">Payment Method</div>
+            <div className="pay-methods">
+              <label className={`pay-method-option${payMethod==='card'?' selected':''}`} onClick={()=>setPayMethod('card')}>
+                <input type="radio" name="pay" value="card" checked={payMethod==='card'} onChange={()=>setPayMethod('card')}/>
+                <div className="pay-method-label">
+                  <strong>Debit / Credit Card</strong>
+                  <span>Visa, Mastercard, American Express</span>
+                </div>
+                <div className="pay-method-logos">
+                  <span className="card-chip">VISA</span>
+                  <span className="card-chip">MC</span>
+                  <span className="card-chip">AMEX</span>
+                </div>
+              </label>
+              <label className={`pay-method-option${payMethod==='applepay'?' selected':''}`} onClick={()=>setPayMethod('applepay')}>
+                <input type="radio" name="pay" value="applepay" checked={payMethod==='applepay'} onChange={()=>setPayMethod('applepay')}/>
+                <div className="pay-method-label">
+                  <strong>Apple Pay</strong>
+                  <span>Touch ID / Face ID — fast & secure</span>
+                </div>
+                <svg viewBox="0 0 30 12" style={{width:'38px',height:'16px',fill:'#000',marginLeft:'auto'}}>
+                  <text x="0" y="10" fontSize="8" fontFamily="Arial" fontWeight="bold"></text>
+                  <path d="M8.5 1.5c-.6.7-1.5 1.2-2.4 1.1-.1-.9.3-1.9.9-2.5C7.6-.6 8.6-1 9.4-.9c.1 1-.3 1.9-.9 2.4zm.9 1.4c-1.3-.1-2.4.7-3.1.7-.6 0-1.6-.7-2.7-.7C2.2 3 .7 3.9 0 5.3c-1.4 2.9-.4 7.2 1 9.5.7 1 1.5 2.1 2.6 2.1 1 0 1.4-.7 2.7-.7 1.3 0 1.7.7 2.8.7 1.1 0 1.8-1 2.5-2 .8-1.2 1.1-2.3 1.1-2.4 0 0-2.1-.8-2.1-3.1 0-1.9 1.6-2.8 1.7-2.9-.9-1.4-2.4-1.6-2.9-1.6z"/>
+                </svg>
+              </label>
+              <label className={`pay-method-option${payMethod==='cod'?' selected':''}`} onClick={()=>setPayMethod('cod')}>
+                <input type="radio" name="pay" value="cod" checked={payMethod==='cod'} onChange={()=>setPayMethod('cod')}/>
+                <div className="pay-method-label">
+                  <strong>Cash on Delivery</strong>
+                  <span>Pay in cash when your order arrives</span>
+                </div>
+                <span style={{fontSize:'1.2rem',marginLeft:'auto'}}>💷</span>
+              </label>
+            </div>
+
+            {payMethod==='card'&&(
+              <div className="card-fields">
+                <div className="form-group">
+                  <label>Name on Card</label>
+                  <input value={card.name} onChange={e=>setC('name',e.target.value)} placeholder="Jane Smith"/>
+                  {errors.cardName&&<span className="form-error">{errors.cardName}</span>}
+                </div>
+                <div className="form-group">
+                  <label>Card Number</label>
+                  <div className="card-number-wrap">
+                    <input value={card.number} onChange={e=>setC('number',fmtCard(e.target.value))} placeholder="1234 5678 9012 3456" maxLength={19}/>
+                    <div className="card-icons-inline"><span className="ci">VISA</span><span className="ci">MC</span></div>
+                  </div>
+                  {errors.cardNum&&<span className="form-error">{errors.cardNum}</span>}
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Expiry (MM/YY)</label>
+                    <input value={card.expiry} onChange={e=>setC('expiry',fmtExpiry(e.target.value))} placeholder="08/27" maxLength={5}/>
+                    {errors.expiry&&<span className="form-error">{errors.expiry}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label>CVV / CVC</label>
+                    <input value={card.cvv} onChange={e=>setC('cvv',e.target.value.replace(/\D/g,'').slice(0,4))} placeholder="123" type="password"/>
+                    {errors.cvv&&<span className="form-error">{errors.cvv}</span>}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {payMethod==='applepay'&&(
+              <button type="button" className="apple-pay-display" onClick={handleApplePay} disabled={loading}>
+                <svg viewBox="0 0 814 1000" className="apple-svg" style={{width:'16px',height:'16px'}}>
+                  <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 454.4 8.5 338.3 8.5 226.5c0-169.3 110.6-258.8 219.4-258.8 55.8 0 102.5 36.6 137.7 36.6 33.5 0 85.5-39.5 149.2-39.5 24 0 108.2 2.6 168.6 75.7zm-257.4-91.3C506.1 71 534.9 34.2 547.3 17.2c14.5-19.2 36-43.2 73.2-43.2 1.9 0 3.9.3 5.8.6-1.3 22-14.5 59.1-36.6 87.5-20.1 26.6-53.5 53.9-99.5 50.7z"/>
+                </svg>
+                Pay with Apple Pay — £{total.toFixed(2)}
+              </button>
+            )}
+
+            {payMethod!=='applepay'&&(
+              <button type="submit" className="place-order-btn" disabled={loading}>
+                {loading?'Processing…':`Place Order — £${total.toFixed(2)}`}
+              </button>
+            )}
+            <p className="secure-note">🔒 256-bit SSL Encrypted · PCI DSS Compliant · Your data is safe</p>
+          </form>
+          <button onClick={onBack} style={{background:'none',border:'none',color:'var(--text-light)',cursor:'pointer',font:'0.82rem Lato,sans-serif',marginTop:'1rem',textDecoration:'underline'}}>← Back to cart</button>
+        </div>
+
+        {/* ORDER SUMMARY */}
+        <div className="checkout-summary">
+          <h3>Order Summary</h3>
+          {cart.map(item=>(
+            <div className="summary-item" key={item.id}>
+              <span className="summary-item-name">{item.name}</span>
+              <span className="summary-item-qty">×{item.qty}</span>
+              <span className="summary-item-price">£{(item.price*item.qty).toFixed(2)}</span>
+            </div>
+          ))}
+          <div className="summary-total">
+            <span>Total</span>
+            <strong>£{total.toFixed(2)}</strong>
+          </div>
+          <p style={{fontSize:'0.76rem',color:'var(--text-light)',marginTop:'0.8rem',lineHeight:'1.6'}}>Free delivery on orders over £45 within 12 miles · Standard delivery £4.99</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════ ORDER CONFIRMATION ════════════ */
+function OrderConfirmPage({info,onContinue}){
+  return(
+    <div className="checkout-page" style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+      <div className="confirm-box">
+        <div className="confirm-icon">🎂</div>
+        <h2>Order Confirmed!</h2>
+        <p>Thank you, <strong>{info.name}</strong>. Your cake is being prepared with love.</p>
+        <div className="confirm-ref">Order Reference: <strong>{info.ref}</strong></div>
+        <p style={{fontSize:'0.82rem',color:'var(--text-light)',marginBottom:'0.5rem'}}>Notifications sent to:</p>
+        <div className="notif-sent">
+          {info.email&&info.email!=='—'&&(
+            <div className="notif-item">
+              <span>✉️</span>
+              <span>Confirmation email sent to <strong>{info.email}</strong></span>
+              <span className="ni-sent">SENT</span>
+            </div>
+          )}
+          {info.phone&&info.phone!=='—'&&(
+            <div className="notif-item">
+              <span>📱</span>
+              <span>SMS notification sent to <strong>{info.phone}</strong></span>
+              <span className="ni-sent">SENT</span>
+            </div>
+          )}
+        </div>
+        <p style={{fontSize:'0.8rem',color:'var(--text-light)',marginTop:'0.5rem'}}>In a real deployment, confirmation emails are sent via SendGrid/Mailgun and SMS via Twilio.</p>
+        <button className="btn-primary" style={{marginTop:'1.5rem',border:'none',width:'100%',textAlign:'center'}} onClick={onContinue}>Continue Shopping</button>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════ CART PANEL ════════════ */
+function CartPanel({cart,onClose,onQty,onRemove,onCheckout}){
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  return(
+    <div className="cart-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="cart-panel">
+        <div className="cart-header">
+          <h2>Your Cart {cart.length>0&&<small style={{color:'var(--caramel)',fontSize:'0.82rem'}}>({cart.reduce((s,i)=>s+i.qty,0)} items)</small>}</h2>
+          <button className="cart-close" onClick={onClose}>✕</button>
+        </div>
+        <div className="cart-items">
+          {cart.length===0
+            ?<div className="empty-cart"><div className="e-icon">🎂</div><p>Your cart is empty.</p><p style={{marginTop:'0.3rem',fontSize:'0.8rem'}}>Add a cake to get started!</p></div>
+            :cart.map(item=>(
+              <div className="cart-item" key={item.id}>
+                <img src={item.img} alt={item.name}/>
+                <div className="cart-item-info">
+                  <h4>{item.name}</h4>
+                  <div className="c-price">£{(item.price*item.qty).toFixed(2)}</div>
+                  <div className="qty-ctrl">
+                    <button className="qty-btn" onClick={()=>onQty(item.id,-1)}>−</button>
+                    <span className="qty-num">{item.qty}</span>
+                    <button className="qty-btn" onClick={()=>onQty(item.id,1)}>+</button>
+                  </div>
+                </div>
+                <button className="remove-btn" onClick={()=>onRemove(item.id)}>✕</button>
+              </div>
+            ))
+          }
+        </div>
+        {cart.length>0&&(
+          <div className="cart-footer">
+            <div className="cart-total"><span>Total</span><strong>£{total.toFixed(2)}</strong></div>
+            <button className="btn-checkout-go" onClick={()=>{onClose();onCheckout();}}>Proceed to Checkout →</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ════════════ AUTH MODAL ════════════ */
+function AuthModal({onClose,onRegister}){
+  const[tab,setTab]=useState('signin');
+  const[done,setDone]=useState(false);
+  const[f,setF]=useState({name:'',email:'',password:''});
+  function handle(e){
+    e.preventDefault();
+    if(tab==='signup'&&f.name&&f.email) onRegister({name:f.name,email:f.email});
+    setDone(true);setTimeout(onClose,1000);
+  }
+  return(
+    <div className="auth-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="auth-box">
+        <div className="auth-top">
+          <button className="auth-close-btn" onClick={onClose}>✕</button>
+          <h2>Cake Delight</h2>
+          <p>{done?'✓ Welcome! Redirecting…':'Your sweet account awaits'}</p>
+        </div>
+        <div className="auth-tabs">
+          <button className={`auth-tab${tab==='signin'?' active':''}`} onClick={()=>setTab('signin')}>Sign In</button>
+          <button className={`auth-tab${tab==='signup'?' active':''}`} onClick={()=>setTab('signup')}>Register</button>
+        </div>
+        <div className="auth-body">
+          {tab==='signin'?(
+            <form onSubmit={handle}>
+              <div className="form-group"><label>Email</label><input type="email" placeholder="hello@example.com" required/></div>
+              <div className="form-group"><label>Password</label><input type="password" placeholder="••••••••" required/></div>
+              <button className="btn-auth" type="submit">{done?'Signed In ✓':'Sign In'}</button>
+            </form>
+          ):(
+            <form onSubmit={handle}>
+              <div className="form-group"><label>Full Name</label><input value={f.name} onChange={e=>setF(p=>({...p,name:e.target.value}))} placeholder="Your name" required/></div>
+              <div className="form-group"><label>Email</label><input type="email" value={f.email} onChange={e=>setF(p=>({...p,email:e.target.value}))} placeholder="hello@example.com" required/></div>
+              <div className="form-group"><label>Password</label><input type="password" value={f.password} onChange={e=>setF(p=>({...p,password:e.target.value}))} placeholder="Create password" required/></div>
+              <button className="btn-auth" type="submit">{done?'Registered ✓':'Create Account'}</button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════ ADMIN PANEL ════════════ */
+function AdminPanel({clients,orders,subscribers,onClose}){
+  const[tab,setTab]=useState('dashboard');
+  const vip=clients.filter(c=>c.status==='VIP').length;
+  const newC=clients.filter(c=>c.status==='New').length;
+  const rev=clients.reduce((s,c)=>s+c.total,0);
+  function badge(s){return s==='VIP'?'badge-vip':s==='New'?'badge-new':'badge-active';}
+  return(
+    <div className="admin-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="admin-box">
+        <div className="admin-header">
+          <div><h2>Admin Panel — Cake Delight</h2><p>Owner access only · Session data · dhruvintandel1507@gmail.com</p></div>
+          <button className="admin-close" onClick={onClose}>✕</button>
+        </div>
+        <div className="admin-stats-bar">
+          <div className="admin-stat"><span className="a-num">{clients.length}</span><span className="a-lbl">Total Clients</span></div>
+          <div className="admin-stat"><span className="a-num">{vip}</span><span className="a-lbl">VIP Members</span></div>
+          <div className="admin-stat"><span className="a-num">{newC}</span><span className="a-lbl">New This Month</span></div>
+          <div className="admin-stat"><span className="a-num">{orders.length}</span><span className="a-lbl">Total Orders</span></div>
+          <div className="admin-stat"><span className="a-num">£{rev.toFixed(0)}</span><span className="a-lbl">Revenue</span></div>
+        </div>
+        <div className="admin-nav">
+          {[['dashboard','Dashboard'],['clients','Clients'],['orders','Orders'],['subscribers','Subscribers']].map(([k,l])=>(
+            <button key={k} className={`admin-nav-btn${tab===k?' active':''}`} onClick={()=>setTab(k)}>{l}</button>
+          ))}
+        </div>
+        <div className="admin-body">
+          {tab==='dashboard'&&(
+            <>
+            <h3 className="admin-section-title">Quick Summary</h3>
+            <p style={{fontSize:'0.84rem',color:'var(--text-mid)',lineHeight:'1.7',marginBottom:'1rem'}}>Welcome back, Owner. Below is a live overview of all store data including registered clients, orders placed, and email subscribers. All data is saved in-session and auto-updates when customers order or register.</p>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1rem',marginBottom:'1rem'}}>
+              <div style={{background:'var(--beige)',border:'1px solid var(--beige3)',borderRadius:'4px',padding:'1rem'}}>
+                <h4 style={{fontSize:'0.85rem',color:'var(--espresso)',marginBottom:'0.5rem'}}>Recent Clients</h4>
+                {clients.slice(-3).reverse().map(c=>(
+                  <div key={c.id} style={{fontSize:'0.8rem',color:'var(--text-mid)',borderBottom:'1px solid var(--beige2)',padding:'0.35rem 0'}}>{c.name} — <span style={{color:'var(--caramel)'}}>{c.email}</span></div>
+                ))}
+              </div>
+              <div style={{background:'var(--beige)',border:'1px solid var(--beige3)',borderRadius:'4px',padding:'1rem'}}>
+                <h4 style={{fontSize:'0.85rem',color:'var(--espresso)',marginBottom:'0.5rem'}}>Recent Orders</h4>
+                {orders.slice(-3).reverse().map(o=>(
+                  <div key={o.id} style={{fontSize:'0.8rem',color:'var(--text-mid)',borderBottom:'1px solid var(--beige2)',padding:'0.35rem 0'}}>{o.id} — £{o.total} — <span style={{color:'#2a7a2a',fontWeight:700}}>{o.status}</span></div>
+                ))}
+              </div>
+            </div>
+            <p className="admin-schema">-- SQL Schema (simulated in-browser)<br/>CREATE TABLE clients (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100), email VARCHAR(100) UNIQUE, phone VARCHAR(25), joined DATE, orders INT DEFAULT 0, total DECIMAL(10,2) DEFAULT 0, status ENUM('New','Active','VIP'), source VARCHAR(20));<br/>CREATE TABLE orders (id VARCHAR(20) PRIMARY KEY, client_name VARCHAR(100), email VARCHAR(100), phone VARCHAR(25), address TEXT, items TEXT, total DECIMAL(10,2), order_date DATE, status VARCHAR(30), notification_sent BOOLEAN);<br/>CREATE TABLE subscribers (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(100) UNIQUE, joined DATE);</p>
+            </>
+          )}
+          {tab==='clients'&&(
+            <>
+            <h3 className="admin-section-title">Registered Clients — TABLE: clients ({clients.length} records)</h3>
+            <div style={{overflowX:'auto'}}>
+              <table className="admin-table">
+                <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Orders</th><th>Spent</th><th>Status</th><th>Source</th></tr></thead>
+                <tbody>
+                  {clients.map(c=>(
+                    <tr key={c.id}>
+                      <td>{c.id}</td><td><strong>{c.name}</strong></td><td>{c.email}</td><td>{c.phone}</td>
+                      <td>{c.joined}</td><td>{c.orders}</td><td>£{c.total.toFixed(2)}</td>
+                      <td><span className={badge(c.status)}>{c.status}</span></td>
+                      <td><span className="badge-sub">{c.source}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            </>
+          )}
+          {tab==='orders'&&(
+            <>
+            <h3 className="admin-section-title">Customer Orders — TABLE: orders ({orders.length} records)</h3>
+            <div style={{overflowX:'auto'}}>
+              <table className="admin-table">
+                <thead><tr><th>Ref</th><th>Client</th><th>Email</th><th>Phone</th><th>Items</th><th>Total</th><th>Date</th><th>Payment</th><th>Status</th><th>Notified</th></tr></thead>
+                <tbody>
+                  {orders.map(o=>(
+                    <tr key={o.id}>
+                      <td><strong>{o.id}</strong></td><td>{o.client}</td><td style={{fontSize:'0.76rem'}}>{o.email}</td>
+                      <td style={{fontSize:'0.76rem'}}>{o.phone}</td><td style={{fontSize:'0.76rem',maxWidth:'140px'}}>{o.items}</td>
+                      <td>£{o.total.toFixed(2)}</td><td>{o.date}</td>
+                      <td><span className="badge-sub">{o.payMethod||'card'}</span></td>
+                      <td><span className="badge-active">{o.status}</span></td>
+                      <td><span className={o.notified?'badge-active':'badge-new'}>{o.notified?'Yes':'Pending'}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            </>
+          )}
+          {tab==='subscribers'&&(
+            <>
+            <h3 className="admin-section-title">Email Subscribers — TABLE: subscribers ({subscribers.length} records)</h3>
+            <div style={{overflowX:'auto'}}>
+              <table className="admin-table">
+                <thead><tr><th>#</th><th>Email Address</th><th>Date Subscribed</th></tr></thead>
+                <tbody>
+                  {subscribers.map((s,i)=>(
+                    <tr key={s.id}><td>{i+1}</td><td>{s.email}</td><td>{s.joined}</td></tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════ ADMIN LOGIN ════════════ */
+function AdminLogin({onClose,onSuccess}){
+  const[pw,setPw]=useState('');
+  const[err,setErr]=useState('');
+  function handle(e){
+    e.preventDefault();
+    if(pw==='CakeDelight2026!'){ onSuccess(); }
+    else { setErr('Incorrect password. Access denied.'); }
+  }
+  return(
+    <div className="admin-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="admin-login-box">
+        <div className="admin-login-top">
+          <h2>Owner Access Only</h2>
+          <button className="admin-close" onClick={onClose}>✕</button>
+        </div>
+        <div className="admin-login-body">
+          <p>This panel is restricted to the store owner. Please enter the admin password to continue.</p>
+          {err&&<div className="admin-login-err">{err}</div>}
+          <form onSubmit={handle}>
+            <div className="form-group"><label>Admin Password</label><input type="password" value={pw} onChange={e=>setPw(e.target.value)} placeholder="Enter password" required autoFocus/></div>
+            <button className="btn-primary" type="submit" style={{width:'100%',border:'none',cursor:'pointer',textAlign:'center',marginTop:'0.3rem'}}>Access Admin Panel</button>
+          </form>
+          <p style={{fontSize:'0.72rem',color:'var(--text-light)',marginTop:'0.8rem',textAlign:'center'}}>Demo password: CakeDelight2026!</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════ FOOTER ════════════ */
+function Footer({addToCart}){
+  const FOOTER_CAKES=PRODUCTS.slice(0,6);
+  const[subEmail,setSubEmail]=useState('');
+  const[subDone,setSubDone]=useState(false);
+  function handleSub(e){e.preventDefault();if(subEmail){setSubDone(true);setSubEmail('');}}
+  return(
+    <>
+    <div className="subscribe-bar">
+      <h2>Join Our Sweet Circle</h2>
+      <p>Monthly recipes, early access to seasonal cakes & exclusive discounts delivered to your inbox.</p>
+      <form className="subscribe-form" onSubmit={handleSub}>
+        <input type="email" placeholder="Enter your email address" value={subEmail} onChange={e=>setSubEmail(e.target.value)} required/>
+        <button type="submit">{subDone?'✓ Subscribed!':'Subscribe'}</button>
+      </form>
+    </div>
+    <footer>
+      <div className="footer-top">
+        <div className="footer-brand">
+          <span className="logo-f">Cake <span>Delight</span></span>
+          <p>Handcrafted cakes baked with care in our South London kitchen since 2014. Available for collection and delivery across Greater London.</p>
+          <div className="f-contact">
+            <span>📞 +44 7404752168</span>
+            <span>✉️ dhruvintandel1507@gmail.com</span>
+            <span>📍 42 Lavender Hill, Battersea, SW11 5RQ</span>
+          </div>
+        </div>
+        <div className="footer-col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#collections">Collections</a></li>
+            <li><a href="#gallery">Making Cakes</a></li>
+            <li><a href="#upcoming">Upcoming Orders</a></li>
+          </ul>
+        </div>
+        <div className="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#">Same-Day Delivery</a></li>
+            <li><a href="#">Click & Collect</a></li>
+            <li><a href="#">Bespoke Cakes</a></li>
+            <li><a href="#">Wedding Cakes</a></li>
+            <li><a href="#">Corporate Catering</a></li>
+          </ul>
+        </div>
+        <div className="footer-col">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Allergen Info</a></li>
+            <li><a href="#">Delivery Policy</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div className="footer-cakes">
+        <h4>Our Popular Cakes</h4>
+        <div className="footer-cake-grid">
+          {FOOTER_CAKES.map(p=>(
+            <div className="footer-cake-card" key={p.id} onClick={()=>addToCart(p)}>
+              <div className="footer-cake-img">
+                <img src={p.img} alt={p.name}/>
+                <img className="fc-hover" src={p.imgHover} alt={p.name}/>
+              </div>
+              <div className="footer-cake-info"><h5>{p.name}</h5><span>£{p.price}</span></div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="footer-bottom">
+        <p>© 2026 Cake Delight Ltd. All rights reserved. Registered in England & Wales.</p>
+        <div className="pay-badges">
+          <span className="pay-badge">VISA</span><span className="pay-badge">MASTERCARD</span>
+          <span className="pay-badge">AMEX</span><span className="pay-badge">APPLE PAY</span>
+          <span className="pay-badge">COD</span>
+        </div>
+      </div>
+    </footer>
+    </>
+  );
+}
+
+/* ════════════ MAIN APP ════════════ */
+function App(){
+  const[page,setPage]=useState('home');
+  const[cart,setCart]=useState([]);
+  const[cartOpen,setCartOpen]=useState(false);
+  const[authOpen,setAuthOpen]=useState(false);
+  const[adminLoginOpen,setAdminLoginOpen]=useState(false);
+  const[adminOpen,setAdminOpen]=useState(false);
+  const[toast,setToast]=useState(null);
+  const[orderInfo,setOrderInfo]=useState(null);
+  const[clients,setClients]=useState(INIT_CLIENTS);
+  const[ordersAdmin,setOrdersAdmin]=useState(INIT_ORDERS_ADMIN);
+  const[subscribers,setSubscribers]=useState(INIT_SUBSCRIBERS);
+
+  // Handle keyboard shortcut for admin (Ctrl+Shift+A)
+  useEffect(()=>{
+    function onKey(e){if(e.ctrlKey&&e.shiftKey&&e.key==='A'){setAdminLoginOpen(true);}}
+    window.addEventListener('keydown',onKey);
+    return()=>window.removeEventListener('keydown',onKey);
+  },[]);
+
+  function addToCart(product){
+    setCart(prev=>{
+      const ex=prev.find(i=>i.id===product.id);
+      if(ex) return prev.map(i=>i.id===product.id?{...i,qty:i.qty+1}:i);
+      return[...prev,{...product,qty:1}];
+    });
+    setToast(`${product.name} added to cart`);
+  }
+  function adjustQty(id,delta){setCart(prev=>prev.map(i=>i.id===id?{...i,qty:Math.max(1,i.qty+delta)}:i));}
+  function removeItem(id){setCart(prev=>prev.filter(i=>i.id!==id));}
+  const totalQty=cart.reduce((s,i)=>s+i.qty,0);
+
+  function saveClient({name,email,phone='—',source='order'}){
+    setClients(prev=>{
+      const ex=prev.find(c=>c.email===email);
+      if(ex){
+        return prev.map(c=>c.email===email?{...c,orders:c.orders+1,total:c.total+(cart.reduce((s,i)=>s+i.price*i.qty,0)||0),status:c.orders>=3?'VIP':'Active'}:c);
+      }
+      return[...prev,{id:prev.length+1,name,email,phone,joined:today(),orders:1,total:cart.reduce((s,i)=>s+i.price*i.qty,0)||0,status:'New',source}];
+    });
+  }
+  function saveOrder(order){setOrdersAdmin(prev=>[...prev,order]);}
+  function saveSubscriber(email){
+    setSubscribers(prev=>{
+      if(prev.find(s=>s.email===email)) return prev;
+      return[...prev,{id:prev.length+1,email,joined:today()}];
+    });
+    setToast('Subscribed! Check your inbox soon.');
+  }
+  function registerClient({name,email}){
+    setClients(prev=>{
+      if(prev.find(c=>c.email===email)) return prev;
+      return[...prev,{id:prev.length+1,name,email,phone:'—',joined:today(),orders:0,total:0,status:'New',source:'signup'}];
+    });
+    setToast(`Welcome, ${name.split(' ')[0]}! Account created.`);
+  }
+
+  function handleNav(id){
+    setPage(id);
+    if(id!=='checkout'&&id!=='confirmation'){
+      setTimeout(()=>{
+        const el=document.getElementById(id);
+        if(el) el.scrollIntoView({behavior:'smooth'});
+        else window.scrollTo({top:0,behavior:'smooth'});
+      },100);
+    }
+  }
+
+  function handleOrderSuccess(info){
+    setOrderInfo(info);
+    setCart([]);
+    setPage('confirmation');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  const showNav=page!=='checkout'&&page!=='confirmation';
+  const showSlides=page!=='checkout'&&page!=='confirmation';
+  const showFooter=page!=='checkout'&&page!=='confirmation';
+
+  return(
+    <>
+    {showNav&&<Nav activePage={page} onNav={handleNav} onCart={()=>setCartOpen(true)} cartQty={totalQty} onAuth={()=>setAuthOpen(true)} onAdmin={()=>setAdminLoginOpen(true)}/>}
+    {showSlides&&<OfferSlides onNav={handleNav}/>}
+
+    {/* PAGE CONTENT */}
+    {page==='home'&&<><HomePage onNav={handleNav} addToCart={addToCart}/><CollectionsPage addToCart={addToCart}/><GalleryPage/><OrdersPage/><AboutPage/><TestimonialsPage/><ContactPage addToast={msg=>setToast(msg)}/></>}
+    {page==='collections'&&<CollectionsPage addToCart={addToCart}/>}
+    {page==='gallery'&&<GalleryPage/>}
+    {page==='upcoming'&&<OrdersPage/>}
+    {page==='about'&&<AboutPage/>}
+    {page==='testimonials'&&<TestimonialsPage/>}
+    {page==='contact'&&<ContactPage addToast={msg=>setToast(msg)}/>}
+    {page==='checkout'&&<CheckoutPage cart={cart} onSuccess={handleOrderSuccess} onBack={()=>setPage('home')} onSaveClient={saveClient} onSaveOrder={saveOrder}/>}
+    {page==='confirmation'&&orderInfo&&<OrderConfirmPage info={orderInfo} onContinue={()=>setPage('home')}/>}
+
+    {showFooter&&<Footer addToCart={addToCart}/>}
+
+    {/* PANELS & MODALS */}
+    {cartOpen&&<CartPanel cart={cart} onClose={()=>setCartOpen(false)} onQty={adjustQty} onRemove={removeItem} onCheckout={()=>{setCartOpen(false);setPage('checkout');window.scrollTo({top:0,behavior:'smooth'});}}/>}
+    {authOpen&&<AuthModal onClose={()=>setAuthOpen(false)} onRegister={registerClient}/>}
+    {adminLoginOpen&&<AdminLogin onClose={()=>setAdminLoginOpen(false)} onSuccess={()=>{setAdminLoginOpen(false);setAdminOpen(true);}}/>}
+    {adminOpen&&<AdminPanel clients={clients} orders={ordersAdmin} subscribers={subscribers} onClose={()=>setAdminOpen(false)}/>}
+    {toast&&<Toast msg={toast} onDone={()=>setToast(null)}/>}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('app')).render(<App/>);
+</script>
+</body>
+</html>
